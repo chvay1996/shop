@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,10 +11,10 @@ namespace shop
             Console.CursorVisible = false;
             Player player = new Player();
             Seller seller = new Seller();
-            Product product = new Product();
             string[] menu = {"Товар в магазине", "Мой товар", "Передать товар","Выход" };
             int index = 0;
             bool launchingTheProgram = true;
+            bool isShowProsuct = true;
 
             while (launchingTheProgram)
             {
@@ -48,14 +48,13 @@ namespace shop
                         switch (index)
                         {
                             case 0:
-                                seller.ShowProsuct(false);
+                                seller.ShowProsuct(!isShowProsuct, player, seller);
                                 break;
                             case 1:
                                 player.ShowPlayerProduct(seller);
                                 break;
                             case 2:
-                                seller.ShowProsuct(true);
-                                player.BuyProduct(seller, product);
+                                seller.ShowProsuct(isShowProsuct, player, seller);
                                 break;
                             case 3:
                                 launchingTheProgram = !launchingTheProgram;
@@ -71,48 +70,29 @@ namespace shop
     {
         private List<Product> _playerProducts = new List<Product>();
         private int _money = 100;
+        private int _indexExchangeProduct = 0;
 
-        public void BuyProduct(Seller seller, Product product)
+        public void BuyProduct(Seller seller)
         {
             _playerProducts.Add(seller.CopyProdect()[Exchange(seller)]);
             seller.Clear();
         }
-
         public int Exchange (Seller seller)
         {
-            int indexExchangeProduct = 0;
             Console.Write("Введите номер товара: ");
-            switch (int.Parse(Console.ReadLine()))
-            {
-                case 1:
-                    indexExchangeProduct = 0;
-                    TakeAwayMoney(0, seller);
-                    seller.DeleteProducts(0);
-                    break;
-                case 2:
-                    indexExchangeProduct = 1;
-                    TakeAwayMoney(1, seller);
-                    seller.DeleteProducts(1);
-                    break;
-                case 3:
-                    indexExchangeProduct = 2;
-                    TakeAwayMoney(2, seller);
-                    seller.DeleteProducts(2);
-                    break;
-                default:
-                    Console.WriteLine("Вы ввели не верное значение!");
-                    break;
-            }
-            return indexExchangeProduct;
-        }
+            _indexExchangeProduct = int.Parse(Console.ReadLine()) - 1;
 
+            TakeAwayMoney(_indexExchangeProduct, seller);
+            seller.DeleteProducts(_indexExchangeProduct);
+
+            return _indexExchangeProduct;
+        }
         public void TakeAwayMoney(int index, Seller seller)
         {
             _money -= seller.CopyProdect()[index].MoneyPraic;
             seller.Money(seller.CopyProdect()[index].MoneyPraic);
 
         }
-
         public void ShowPlayerProduct(Seller seller)
         {
             Console.WriteLine($"\nУ вас денег {_money}");
@@ -129,7 +109,6 @@ namespace shop
             else Console.WriteLine("У вас нет продуктов");
             seller.Clear();
         }
-
         public List<Product> CopyProdect()
         {
             List<Product> products = _playerProducts.ToList();
@@ -148,24 +127,22 @@ namespace shop
             _products.Add(new Product("Рыба", 15));
             _products.Add(new Product("Шоколад", 10));
         }
-
         public void Money (int money)
         {
             _money = money;
         }
-
         public void DeleteProducts(int indexDelete)
         {
             _products.RemoveAt(indexDelete);
         }
-
-        public void ShowProsuct(bool isClear)
+        public void ShowProsuct(bool isClear, Player player, Seller seller)
         {
             if (isClear == true)
             {
                 Console.WriteLine();
 
                 IsClear();
+                player.BuyProduct(seller);
             }
             else
             {
@@ -175,7 +152,23 @@ namespace shop
                 Clear();
             }
         }
+        public List<Product> CopyProdect()
+        {
+            List<Product> products = _products.ToList();
+            return products;
+        }
+        public void Clear()
+        {
+            Console.ReadKey();
+            int namberVacation = 5;
+            int numberOfRepetitions = 20;
+            Console.SetCursorPosition(0, namberVacation);
 
+            for (int i = 0; i < numberOfRepetitions; i++)
+            {
+                Console.WriteLine("\t\t\t\t\t\t\t\t\t");
+            }
+        }
         private void IsClear()
         {
             if (CopyProdect().Count >= 1)
@@ -189,23 +182,6 @@ namespace shop
             }
             else Console.WriteLine("Больше нет товара в магазине");
         }
-
-        public List<Product> CopyProdect()
-        {
-            List<Product> products = _products.ToList();
-            return products;
-        }
-
-        public void Clear()
-        {
-            Console.ReadKey();
-            Console.SetCursorPosition(0, 5);
-
-            for (int i = 0; i < 20; i++)
-            {
-                Console.WriteLine("\t\t\t\t\t\t\t\t\t");
-            }
-        }
     }
 
     class Product
@@ -218,8 +194,6 @@ namespace shop
             NameProduct = name;
             MoneyPraic = moneyPraic;
         }
-        
-        public Product() { }
         public void ShowDetalis(int namberProduct, bool isTovar)
         {
             if (isTovar == true)
