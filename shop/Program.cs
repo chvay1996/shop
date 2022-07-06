@@ -123,7 +123,6 @@ namespace shop
     class Seller
     {
         private List<Product> _products = new List<Product>();
-        public int _money { get; private set; }
 
         public Seller()
         {
@@ -192,13 +191,12 @@ namespace shop
             }
             else Console.WriteLine("Больше нет товара в магазине");
         }
+
+        public int _money { get; private set; }
     }
 
     class Product
     {
-        public string NameProduct { get; private set; }
-        public int MoneyPraic { get; private set; }
-
         public Product (string name, int moneyPraic)
         {
             NameProduct = name;
@@ -213,6 +211,9 @@ namespace shop
             }
             else Console.WriteLine($"{namberProduct}. Товар {NameProduct}");
         }
+
+        public string NameProduct { get; private set; }
+        public int MoneyPraic { get; private set; }
     }
 }
 /*Задача:
