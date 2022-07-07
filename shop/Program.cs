@@ -71,13 +71,11 @@ namespace shop
         private List<Product> _playerProducts = new List<Product>();
         private int _money = 100;
         private int _indexExchangeProduct = 0;
-
         public void BuyProduct(Seller seller)
         {
             _playerProducts.Add(seller.CopyProdect()[Exchange(seller)]);
             seller.Clear();
         }
-
         public int Exchange (Seller seller)
         {
             Console.Write("Введите номер товара: ");
@@ -88,14 +86,12 @@ namespace shop
 
             return _indexExchangeProduct;
         }
-
         public void TakeAwayMoney(int index, Seller seller)
         {
             _money -= seller.CopyProdect()[index].MoneyPraic;
             seller.Money(seller.CopyProdect()[index].MoneyPraic);
 
         }
-
         public void ShowPlayerProduct(Seller seller)
         {
             Console.WriteLine($"\nУ вас денег {_money}");
@@ -112,7 +108,6 @@ namespace shop
             else Console.WriteLine("У вас нет продуктов");
             seller.Clear();
         }
-
         public List<Product> CopyProdect()
         {
             List<Product> products = _playerProducts.ToList();
@@ -130,17 +125,15 @@ namespace shop
             _products.Add(new Product("Рыба", 15));
             _products.Add(new Product("Шоколад", 10));
         }
-
+        public int _money { get; private set; }
         public void Money (int money)
         {
             _money = money;
         }
-
         public void DeleteProducts(int indexDelete)
         {
             _products.RemoveAt(indexDelete);
         }
-
         public void ShowProsuct(bool isClear, Player player, Seller seller)
         {
             if (isClear == true)
@@ -158,13 +151,11 @@ namespace shop
                 Clear();
             }
         }
-
         public List<Product> CopyProdect()
         {
             List<Product> products = _products.ToList();
             return products;
         }
-
         public void Clear()
         {
             Console.ReadKey();
@@ -177,7 +168,6 @@ namespace shop
                 Console.WriteLine("\t\t\t\t\t\t\t\t\t");
             }
         }
-
         private void IsClear()
         {
             if (CopyProdect().Count >= 1)
@@ -192,7 +182,6 @@ namespace shop
             else Console.WriteLine("Больше нет товара в магазине");
         }
 
-        public int _money { get; private set; }
     }
 
     class Product
@@ -202,7 +191,8 @@ namespace shop
             NameProduct = name;
             MoneyPraic = moneyPraic;
         }
-
+        public string NameProduct { get; private set; }
+        public int MoneyPraic { get; private set; }
         public void ShowDetalis(int namberProduct, bool isTovar)
         {
             if (isTovar == true)
@@ -211,9 +201,6 @@ namespace shop
             }
             else Console.WriteLine($"{namberProduct}. Товар {NameProduct}");
         }
-
-        public string NameProduct { get; private set; }
-        public int MoneyPraic { get; private set; }
     }
 }
 /*Задача:
